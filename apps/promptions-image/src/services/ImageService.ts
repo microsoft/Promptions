@@ -3,9 +3,12 @@ import { ImageGenerationParams, GeneratedImage } from "../types";
 
 export class ImageService {
     private client: OpenAI;
+    private chatModel: string;
 
     constructor() {
         const apiKey = import.meta.env.VITE_OPENAI_API_KEY || process.env.OPENAI_API_KEY;
+        const baseURL = import.meta.env.VITE_OPENAI_BASE_URL || process.env.OPENAI_BASE_URL;
+        this.chatModel = import.meta.env.VITE_OPENAI_MODEL || process.env.OPENAI_MODEL || "gpt-3.5-turbo";
 
         if (!apiKey) {
             throw new Error(
@@ -15,6 +18,7 @@ export class ImageService {
 
         this.client = new OpenAI({
             apiKey,
+            baseURL,
             dangerouslyAllowBrowser: true, // Only for demo purposes - use a backend in production
         });
     }
@@ -61,7 +65,7 @@ export class ImageService {
         try {
             const stream = await this.client.chat.completions.create(
                 {
-                    model: "gpt-4.1",
+                    model: this.chatModel,
                     messages: messages as OpenAI.Chat.Completions.ChatCompletionMessageParam[],
                     stream: true,
                     temperature: 0.7,
