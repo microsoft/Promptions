@@ -7,6 +7,7 @@ interface ChatMessage {
 
 export class ChatService {
     private client: OpenAI;
+    private model: string;
 
     constructor() {
         // In a real application, you'd want to handle the API key more securely
@@ -19,8 +20,15 @@ export class ChatService {
             );
         }
 
+        const baseURL = import.meta.env.VITE_OPENAI_BASE_URL || process.env.OPENAI_BASE_URL;
+        const apiVersion = import.meta.env.VITE_OPENAI_API_VERSION || process.env.OPENAI_API_VERSION;
+        this.model = import.meta.env.VITE_OPENAI_MODEL || process.env.OPENAI_MODEL || "gpt-4.1";
+
         this.client = new OpenAI({
             apiKey,
+            ...(baseURL ? { baseURL } : {}),
+            ...(apiVersion ? { defaultQuery: { "api-version": apiVersion } } : {}),
+            ...(baseURL ? { defaultHeaders: { "api-key": apiKey } } : {}),
             dangerouslyAllowBrowser: true, // Only for demo purposes - use a backend in production
         });
     }
@@ -35,7 +43,7 @@ export class ChatService {
         try {
             const stream = await this.client.chat.completions.create(
                 {
-                    model: "gpt-4.1",
+                    model: this.model,
                     messages: messages as OpenAI.Chat.Completions.ChatCompletionMessageParam[],
                     stream: true,
                     temperature: 0.7,
@@ -64,7 +72,7 @@ export class ChatService {
     async sendMessage(messages: ChatMessage[]): Promise<string> {
         try {
             const response = await this.client.chat.completions.create({
-                model: "gpt-3.5-turbo",
+                model: this.model,
                 messages: messages as OpenAI.Chat.Completions.ChatCompletionMessageParam[],
                 temperature: 0.7,
                 max_tokens: 1000,
