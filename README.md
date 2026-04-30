@@ -1,7 +1,8 @@
 # Promptions - Ephemeral UI for Prompting
 
 Ephemeral UI for prompt refinement - turn one prompt into interactive controls to steer and refine AI.
-![Promptions demo](./Promptions.gif)
+
+[![Promptions baseline demo](./Promptions.gif)](https://www.youtube.com/watch?v=vr3fZpkKy8Q)
 
 ## Overview
 
