@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import OpenAI, { AzureOpenAI } from "openai";
 import { ImageGenerationParams, GeneratedImage } from "../types";
 
 export class ImageService {
@@ -6,9 +6,7 @@ export class ImageService {
     private chatModel: string;
 
     constructor() {
-        const apiKey = import.meta.env.VITE_OPENAI_API_KEY || process.env.OPENAI_API_KEY;
-        const baseURL = import.meta.env.VITE_OPENAI_BASE_URL || process.env.OPENAI_BASE_URL;
-        this.chatModel = import.meta.env.VITE_OPENAI_MODEL || process.env.OPENAI_MODEL || "gpt-3.5-turbo";
+        const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
         if (!apiKey) {
             throw new Error(
@@ -16,11 +14,21 @@ export class ImageService {
             );
         }
 
-        this.client = new OpenAI({
-            apiKey,
-            baseURL,
-            dangerouslyAllowBrowser: true, // Only for demo purposes - use a backend in production
-        });
+        const baseURL = import.meta.env.VITE_OPENAI_BASE_URL;
+        const apiVersion = import.meta.env.VITE_OPENAI_API_VERSION;
+        this.chatModel = import.meta.env.VITE_OPENAI_MODEL || "gpt-4.1";
+
+        this.client = baseURL
+            ? new AzureOpenAI({
+                  apiKey,
+                  endpoint: baseURL,
+                  apiVersion,
+                  dangerouslyAllowBrowser: true, // Only for demo purposes - use a backend in production
+              })
+            : new OpenAI({
+                  apiKey,
+                  dangerouslyAllowBrowser: true, // Only for demo purposes - use a backend in production
+              });
     }
 
     async generateImage(params: ImageGenerationParams, options?: { signal?: AbortSignal }): Promise<GeneratedImage[]> {

@@ -123,6 +123,18 @@ $env:VITE_OPENAI_API_KEY="your_openai_api_key_here" ; yarn workspace @promptions
 $env:VITE_OPENAI_API_KEY="your_openai_api_key_here" ; yarn workspace @promptions/promptions-image dev
 ```
 
+#### Optional configuration
+
+Both apps read these additional `VITE_*` variables from their respective `.env` files. They're all optional — leave them unset to use the standard OpenAI API.
+
+| Variable                  | Description                                                                         | Default   |
+| ------------------------- | ----------------------------------------------------------------------------------- | --------- |
+| `VITE_OPENAI_MODEL`       | Chat model used for completions. The image-generation model is selected in the UI.  | `gpt-4.1` |
+| `VITE_OPENAI_BASE_URL`    | Custom endpoint. Set this to use Azure OpenAI or another OpenAI-compatible service. | _(unset)_ |
+| `VITE_OPENAI_API_VERSION` | API version. Required when `VITE_OPENAI_BASE_URL` points at Azure OpenAI.           | _(unset)_ |
+
+When `VITE_OPENAI_BASE_URL` is set, the apps use the Azure OpenAI client; otherwise they use the standard OpenAI client.
+
 Start the dev servers:
 
 - Chat application (http://localhost:3003):
