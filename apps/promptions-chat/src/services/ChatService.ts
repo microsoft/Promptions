@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import OpenAI, { AzureOpenAI } from "openai";
 
 interface ChatMessage {
     role: "user" | "assistant" | "system";
@@ -24,13 +24,17 @@ export class ChatService {
         const apiVersion = import.meta.env.VITE_OPENAI_API_VERSION || process.env.OPENAI_API_VERSION;
         this.model = import.meta.env.VITE_OPENAI_MODEL || process.env.OPENAI_MODEL || "gpt-4.1";
 
-        this.client = new OpenAI({
-            apiKey,
-            ...(baseURL ? { baseURL } : {}),
-            ...(apiVersion ? { defaultQuery: { "api-version": apiVersion } } : {}),
-            ...(baseURL ? { defaultHeaders: { "api-key": apiKey } } : {}),
-            dangerouslyAllowBrowser: true, // Only for demo purposes - use a backend in production
-        });
+        this.client = baseURL
+            ? new AzureOpenAI({
+                  apiKey,
+                  endpoint: baseURL,
+                  apiVersion,
+                  dangerouslyAllowBrowser: true, // Only for demo purposes - use a backend in production
+              })
+            : new OpenAI({
+                  apiKey,
+                  dangerouslyAllowBrowser: true, // Only for demo purposes - use a backend in production
+              });
     }
 
     async streamChat(
