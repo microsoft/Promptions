@@ -12,7 +12,7 @@ export class ChatService {
     constructor() {
         // In a real application, you'd want to handle the API key more securely
         // For development, you can set VITE_OPENAI_API_KEY in your .env file
-        const apiKey = import.meta.env.VITE_OPENAI_API_KEY || process.env.OPENAI_API_KEY;
+        const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
         if (!apiKey) {
             throw new Error(
@@ -20,9 +20,9 @@ export class ChatService {
             );
         }
 
-        const baseURL = import.meta.env.VITE_OPENAI_BASE_URL || process.env.OPENAI_BASE_URL;
-        const apiVersion = import.meta.env.VITE_OPENAI_API_VERSION || process.env.OPENAI_API_VERSION;
-        this.model = import.meta.env.VITE_OPENAI_MODEL || process.env.OPENAI_MODEL || "gpt-4.1";
+        const baseURL = import.meta.env.VITE_OPENAI_BASE_URL;
+        const apiVersion = import.meta.env.VITE_OPENAI_API_VERSION;
+        this.model = import.meta.env.VITE_OPENAI_MODEL || "gpt-4.1";
 
         this.client = baseURL
             ? new AzureOpenAI({
