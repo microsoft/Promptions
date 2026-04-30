@@ -46,7 +46,7 @@ Before building and running this project, ensure you have:
 - **Node.js** (v18 or higher)
 - **Corepack** (included with Node.js v16.10+, enables automatic Yarn management)
 - **TypeScript** (v5.0 or higher)
-- **OpenAI API Key** (for chat and image generation features)
+- An **OpenAI API key** _or_ an **Azure OpenAI** resource (API key, endpoint, and a deployment) for chat and image generation features
 
 ### Setting up Corepack (Recommended)
 
@@ -97,43 +97,68 @@ yarn build
 
 ### 3. Run the applications (and set your API key)
 
-Set your OpenAI API key so the apps can call the OpenAI APIs.
+The apps can call either the **standard OpenAI API** or your own **Azure OpenAI**-hosted models. Configure whichever you have access to via environment variables — the same `VITE_OPENAI_API_KEY` variable is used in both cases (it holds either your OpenAI key or your Azure OpenAI key).
 
 Option A — .env files (recommended for local development):
 
-- Create `apps/promptions-chat/.env` with:
+**Standard OpenAI**
+
+- Create `apps/promptions-chat/.env` (and `apps/promptions-image/.env`) with:
 
     ```dotenv
     VITE_OPENAI_API_KEY=your_openai_api_key_here
+    # Optional: override the chat model (defaults to gpt-4.1).
+    # The chat app supports GPT-4* and below; GPT-5* and later are NOT supported.
+    # VITE_OPENAI_MODEL=gpt-4.1
     ```
 
-- Create `apps/promptions-image/.env` with:
+**Azure OpenAI** (using your own hosted deployment)
+
+- Create `apps/promptions-chat/.env` (and `apps/promptions-image/.env`) with:
 
     ```dotenv
-    VITE_OPENAI_API_KEY=your_openai_api_key_here
+    # Your Azure OpenAI resource key
+    VITE_OPENAI_API_KEY=your_azure_openai_key_here
+    # Your Azure OpenAI resource endpoint
+    VITE_OPENAI_BASE_URL=https://your-resource.openai.azure.com
+    # Required for Azure OpenAI
+    VITE_OPENAI_API_VERSION=2024-12-01-preview
+    # On Azure, this is your DEPLOYMENT NAME (not the underlying model id).
+    # The chat app supports GPT-4* family deployments and below; GPT-5* and later are NOT supported.
+    VITE_OPENAI_MODEL=your_chat_deployment_name
     ```
 
 Option B — set it in your shell (PowerShell example):
 
 ```powershell
-# Chat app
+# Chat app — standard OpenAI
 $env:VITE_OPENAI_API_KEY="your_openai_api_key_here" ; yarn workspace @promptions/promptions-chat dev
 
-# Image app
+# Chat app — Azure OpenAI
+$env:VITE_OPENAI_API_KEY="your_azure_openai_key_here"
+$env:VITE_OPENAI_BASE_URL="https://your-resource.openai.azure.com"
+$env:VITE_OPENAI_API_VERSION="2024-12-01-preview"
+$env:VITE_OPENAI_MODEL="your_chat_deployment_name"
+yarn workspace @promptions/promptions-chat dev
+
+# Image app (swap workspace name; same variable conventions apply)
 $env:VITE_OPENAI_API_KEY="your_openai_api_key_here" ; yarn workspace @promptions/promptions-image dev
 ```
 
-#### Optional configuration
+#### Configuration reference
 
-Both apps read these additional `VITE_*` variables from their respective `.env` files. They're all optional — leave them unset to use the standard OpenAI API.
+Both apps read these `VITE_*` variables from their respective `.env` files.
 
-| Variable                  | Description                                                                         | Default   |
-| ------------------------- | ----------------------------------------------------------------------------------- | --------- |
-| `VITE_OPENAI_MODEL`       | Chat model used for completions. The image-generation model is selected in the UI.  | `gpt-4.1` |
-| `VITE_OPENAI_BASE_URL`    | Custom endpoint. Set this to use Azure OpenAI or another OpenAI-compatible service. | _(unset)_ |
-| `VITE_OPENAI_API_VERSION` | API version. Required when `VITE_OPENAI_BASE_URL` points at Azure OpenAI.           | _(unset)_ |
+| Variable                  | Description                                                                                                                       | Default   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| `VITE_OPENAI_API_KEY`     | **Required.** Your OpenAI API key, or your Azure OpenAI resource key when `VITE_OPENAI_BASE_URL` is set.                          | _(unset)_ |
+| `VITE_OPENAI_MODEL`       | Chat model used for completions. On Azure OpenAI this is the **deployment name**. The image-generation model is selected in the UI. | `gpt-4.1` |
+| `VITE_OPENAI_BASE_URL`    | Custom endpoint. Set this to use Azure OpenAI (e.g. `https://your-resource.openai.azure.com`) or another OpenAI-compatible service. | _(unset)_ |
+| `VITE_OPENAI_API_VERSION` | API version. **Required** when `VITE_OPENAI_BASE_URL` points at Azure OpenAI (e.g. `2024-12-01-preview`).                         | _(unset)_ |
 
 When `VITE_OPENAI_BASE_URL` is set, the apps use the Azure OpenAI client; otherwise they use the standard OpenAI client.
+
+> **Model compatibility:** The chat reference app supports **GPT-4\* family models and below** (e.g. `gpt-4`, `gpt-4.1`, `gpt-4o`). **GPT-5\* and later are not supported.** On Azure OpenAI, make sure the deployment named in `VITE_OPENAI_MODEL` targets a supported model.
 
 Start the dev servers:
 
