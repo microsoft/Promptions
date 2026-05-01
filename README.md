@@ -149,12 +149,12 @@ $env:VITE_OPENAI_API_KEY="your_openai_api_key_here" ; yarn workspace @promptions
 
 Both apps read these `VITE_*` variables from their respective `.env` files.
 
-| Variable                  | Description                                                                                                                       | Default   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| `VITE_OPENAI_API_KEY`     | **Required.** Your OpenAI API key, or your Azure OpenAI resource key when `VITE_OPENAI_BASE_URL` is set.                          | _(unset)_ |
+| Variable                  | Description                                                                                                                         | Default   |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| `VITE_OPENAI_API_KEY`     | **Required.** Your OpenAI API key, or your Azure OpenAI resource key when `VITE_OPENAI_BASE_URL` is set.                            | _(unset)_ |
 | `VITE_OPENAI_MODEL`       | Chat model used for completions. On Azure OpenAI this is the **deployment name**. The image-generation model is selected in the UI. | `gpt-4.1` |
 | `VITE_OPENAI_BASE_URL`    | Custom endpoint. Set this to use Azure OpenAI (e.g. `https://your-resource.openai.azure.com`) or another OpenAI-compatible service. | _(unset)_ |
-| `VITE_OPENAI_API_VERSION` | API version. **Required** when `VITE_OPENAI_BASE_URL` points at Azure OpenAI (e.g. `2024-12-01-preview`).                         | _(unset)_ |
+| `VITE_OPENAI_API_VERSION` | API version. **Required** when `VITE_OPENAI_BASE_URL` points at Azure OpenAI (e.g. `2024-12-01-preview`).                           | _(unset)_ |
 
 When `VITE_OPENAI_BASE_URL` is set, the apps use the Azure OpenAI client; otherwise they use the standard OpenAI client.
 
