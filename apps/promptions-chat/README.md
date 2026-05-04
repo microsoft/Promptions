@@ -16,33 +16,45 @@ A modern chat interface built with React, Vite, Fluent UI, and OpenAI streaming 
 
 - Node.js 18+
 - Yarn (workspace package manager)
-- OpenAI API key
+- An OpenAI API key, _or_ an Azure OpenAI resource (API key, endpoint, and a deployment)
 
 ### Installation
 
 1. From the workspace root, install dependencies:
 
-    ```bash
-    yarn install
-    ```
+```bash
+yarn install
+```
 
 2. Navigate to the chat app directory:
 
-    ```bash
-    cd apps/promptions-chat
-    ```
+```bash
+cd apps/promptions-chat
+```
 
-3. Copy the environment file and add your OpenAI API key:
+3. Copy the environment file and configure your provider:
 
-    ```bash
-    cp .env.example .env
-    ```
+```bash
+cp .env.example .env
+```
 
-    Edit `.env` and add your OpenAI API key:
+**Standard OpenAI** — edit `.env` and add your OpenAI API key:
 
-    ```
-    VITE_OPENAI_API_KEY=your_api_key_here
-    ```
+```
+VITE_OPENAI_API_KEY=your_api_key_here
+```
+
+**Azure OpenAI** — to use your own Azure-hosted deployment, set:
+
+```
+VITE_OPENAI_API_KEY=your_azure_openai_key_here
+VITE_OPENAI_BASE_URL=https://your-resource.openai.azure.com
+VITE_OPENAI_API_VERSION=2024-12-01-preview
+# On Azure, VITE_OPENAI_MODEL is your DEPLOYMENT NAME (not a model id).
+VITE_OPENAI_MODEL=your_chat_deployment_name
+```
+
+When `VITE_OPENAI_BASE_URL` is set, the app uses the Azure OpenAI client; otherwise it uses the standard OpenAI client.
 
 ### Development
 
@@ -75,8 +87,12 @@ yarn typecheck
 - **React 18** - Modern React with hooks
 - **Vite** - Fast build tool and dev server
 - **Fluent UI** - Microsoft's design system
-- **OpenAI API** - GPT-3.5-turbo with streaming
+- **OpenAI / Azure OpenAI API** - Streaming chat completions (defaults to `gpt-4.1`)
 - **TypeScript** - Full type safety
+
+## Model compatibility
+
+The chat app supports **GPT-4\* family models and below** (e.g. `gpt-4`, `gpt-4.1`, `gpt-4o`). **GPT-5\* and later are not supported.** When using Azure OpenAI, ensure the deployment named in `VITE_OPENAI_MODEL` targets a supported model.
 
 ## Security Notes
 
