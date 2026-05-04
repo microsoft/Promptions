@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import OpenAI, { AzureOpenAI } from "openai";
 
 interface ChatMessage {
     role: "user" | "assistant" | "system";
@@ -12,9 +12,7 @@ export class ChatService {
     constructor() {
         // In a real application, you'd want to handle the API key more securely
         // For development, you can set VITE_OPENAI_API_KEY in your .env file
-        const apiKey = import.meta.env.VITE_OPENAI_API_KEY || process.env.OPENAI_API_KEY;
-        const baseURL = import.meta.env.VITE_OPENAI_BASE_URL || process.env.OPENAI_BASE_URL;
-        this.model = import.meta.env.VITE_OPENAI_MODEL || process.env.OPENAI_MODEL || "gpt-3.5-turbo";
+        const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
         if (!apiKey) {
             throw new Error(
@@ -22,11 +20,21 @@ export class ChatService {
             );
         }
 
-        this.client = new OpenAI({
-            apiKey,
-            baseURL,
-            dangerouslyAllowBrowser: true, // Only for demo purposes - use a backend in production
-        });
+        const baseURL = import.meta.env.VITE_OPENAI_BASE_URL;
+        const apiVersion = import.meta.env.VITE_OPENAI_API_VERSION;
+        this.model = import.meta.env.VITE_OPENAI_MODEL || "gpt-4.1";
+
+        this.client = baseURL
+            ? new AzureOpenAI({
+                  apiKey,
+                  endpoint: baseURL,
+                  apiVersion,
+                  dangerouslyAllowBrowser: true, // Only for demo purposes - use a backend in production
+              })
+            : new OpenAI({
+                  apiKey,
+                  dangerouslyAllowBrowser: true, // Only for demo purposes - use a backend in production
+              });
     }
 
     async streamChat(
