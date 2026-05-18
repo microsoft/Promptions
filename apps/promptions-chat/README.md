@@ -87,12 +87,12 @@ yarn typecheck
 - **React 18** - Modern React with hooks
 - **Vite** - Fast build tool and dev server
 - **Fluent UI** - Microsoft's design system
-- **OpenAI / Azure OpenAI API** - Streaming chat completions (defaults to `gpt-4.1`)
+- **OpenAI / Azure OpenAI API** - Streaming chat completions (defaults to `gpt-5.4-nano`)
 - **TypeScript** - Full type safety
 
 ## Model compatibility
 
-The chat app supports **GPT-4\* family models and below** (e.g. `gpt-4`, `gpt-4.1`, `gpt-4o`). **GPT-5\* and later are not supported.** When using Azure OpenAI, ensure the deployment named in `VITE_OPENAI_MODEL` targets a supported model.
+The chat app uses the model configured in `VITE_OPENAI_MODEL`, defaulting to `gpt-5.4-nano`. When using Azure OpenAI, ensure the deployment named in `VITE_OPENAI_MODEL` targets a chat-completions-compatible model.
 
 ## Security Notes
 

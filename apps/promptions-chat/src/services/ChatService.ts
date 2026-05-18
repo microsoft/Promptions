@@ -22,7 +22,7 @@ export class ChatService {
 
         const baseURL = import.meta.env.VITE_OPENAI_BASE_URL;
         const apiVersion = import.meta.env.VITE_OPENAI_API_VERSION;
-        this.model = import.meta.env.VITE_OPENAI_MODEL || "gpt-4.1";
+        this.model = import.meta.env.VITE_OPENAI_MODEL || "gpt-5.4-nano";
 
         this.client = baseURL
             ? new AzureOpenAI({
@@ -50,8 +50,7 @@ export class ChatService {
                     model: this.model,
                     messages: messages as OpenAI.Chat.Completions.ChatCompletionMessageParam[],
                     stream: true,
-                    temperature: 0.7,
-                    max_tokens: 1000,
+                    max_completion_tokens: 1000,
                 },
                 {
                     signal: options?.signal,
@@ -78,8 +77,7 @@ export class ChatService {
             const response = await this.client.chat.completions.create({
                 model: this.model,
                 messages: messages as OpenAI.Chat.Completions.ChatCompletionMessageParam[],
-                temperature: 0.7,
-                max_tokens: 1000,
+                max_completion_tokens: 1000,
             });
 
             return response.choices[0]?.message?.content || "No response received";
