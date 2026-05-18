@@ -16,7 +16,7 @@ export class ImageService {
 
         const baseURL = import.meta.env.VITE_OPENAI_BASE_URL;
         const apiVersion = import.meta.env.VITE_OPENAI_API_VERSION;
-        this.chatModel = import.meta.env.VITE_OPENAI_MODEL || "gpt-4.1";
+        this.chatModel = import.meta.env.VITE_OPENAI_MODEL || "gpt-5.4-nano";
 
         this.client = baseURL
             ? new AzureOpenAI({
@@ -76,8 +76,7 @@ export class ImageService {
                     model: this.chatModel,
                     messages: messages as OpenAI.Chat.Completions.ChatCompletionMessageParam[],
                     stream: true,
-                    temperature: 0.7,
-                    max_tokens: 1000,
+                    max_completion_tokens: 1000,
                 },
                 {
                     signal: options?.signal,

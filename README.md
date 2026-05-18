@@ -107,9 +107,8 @@ Option A — .env files (recommended for local development):
 
     ```dotenv
     VITE_OPENAI_API_KEY=your_openai_api_key_here
-    # Optional: override the chat model (defaults to gpt-4.1).
-    # The chat app supports GPT-4* and below; GPT-5* and later are NOT supported.
-    # VITE_OPENAI_MODEL=gpt-4.1
+    # Optional: override the chat model (defaults to gpt-5.4-nano).
+    # VITE_OPENAI_MODEL=gpt-5.4-nano
     ```
 
 **Azure OpenAI** (using your own hosted deployment)
@@ -124,7 +123,7 @@ Option A — .env files (recommended for local development):
     # Required for Azure OpenAI
     VITE_OPENAI_API_VERSION=2024-12-01-preview
     # On Azure, this is your DEPLOYMENT NAME (not the underlying model id).
-    # The chat app supports GPT-4* family deployments and below; GPT-5* and later are NOT supported.
+    # Ensure this deployment targets a chat-completions-compatible model.
     VITE_OPENAI_MODEL=your_chat_deployment_name
     ```
 
@@ -152,13 +151,13 @@ Both apps read these `VITE_*` variables from their respective `.env` files.
 | Variable                  | Description                                                                                                                         | Default   |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | --------- |
 | `VITE_OPENAI_API_KEY`     | **Required.** Your OpenAI API key, or your Azure OpenAI resource key when `VITE_OPENAI_BASE_URL` is set.                            | _(unset)_ |
-| `VITE_OPENAI_MODEL`       | Chat model used for completions. On Azure OpenAI this is the **deployment name**. The image-generation model is selected in the UI. | `gpt-4.1` |
+| `VITE_OPENAI_MODEL`       | Chat model used for completions. On Azure OpenAI this is the **deployment name**. The image-generation model is selected in the UI. | `gpt-5.4-nano` |
 | `VITE_OPENAI_BASE_URL`    | Custom endpoint. Set this to use Azure OpenAI (e.g. `https://your-resource.openai.azure.com`) or another OpenAI-compatible service. | _(unset)_ |
 | `VITE_OPENAI_API_VERSION` | API version. **Required** when `VITE_OPENAI_BASE_URL` points at Azure OpenAI (e.g. `2024-12-01-preview`).                           | _(unset)_ |
 
 When `VITE_OPENAI_BASE_URL` is set, the apps use the Azure OpenAI client; otherwise they use the standard OpenAI client.
 
-> **Model compatibility:** The chat reference app supports **GPT-4\* family models and below** (e.g. `gpt-4`, `gpt-4.1`, `gpt-4o`). **GPT-5\* and later are not supported.** On Azure OpenAI, make sure the deployment named in `VITE_OPENAI_MODEL` targets a supported model.
+> **Model compatibility:** The chat reference app uses `VITE_OPENAI_MODEL`, defaulting to `gpt-5.4-nano`. On Azure OpenAI, make sure the deployment named in `VITE_OPENAI_MODEL` targets a chat-completions-compatible model.
 
 Start the dev servers:
 
