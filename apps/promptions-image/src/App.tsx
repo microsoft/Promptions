@@ -222,10 +222,10 @@ function App() {
 
             const images = await imageService.generateImage(
                 {
-                    kind: "dall-e-3",
+                    kind: "gpt-image-1",
                     prompt: enhancedPrompt,
                     size: "1024x1024",
-                    quality: "hd",
+                    quality: "high",
                     n: 1,
                 },
                 {

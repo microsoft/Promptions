@@ -12,6 +12,7 @@
     "scripts": {
         "clean": "yarn nx run-many -t clean",
         "typecheck": "yarn nx run-many -t typecheck",
+        "test": "yarn nx run-many -t test",
         "build": "yarn nx run-many -t build",
         "prettier:check": "prettier --check .",
         "prettier:write": "prettier --write ."

@@ -3613,6 +3613,7 @@ __metadata:
   dependencies:
     "@fluentui/react-components": "npm:^9.54.0"
     "@fluentui/react-icons": "npm:^2.0.258"
+    "@promptions/promptions-openai-proxy": "workspace:*"
     "@promptions/promptions-ui": "workspace:*"
     "@types/react": "npm:^18.3.12"
     "@types/react-dom": "npm:^18.3.1"
@@ -3636,6 +3637,7 @@ __metadata:
   dependencies:
     "@fluentui/react-components": "npm:^9.54.0"
     "@fluentui/react-icons": "npm:^2.0.258"
+    "@promptions/promptions-openai-proxy": "workspace:*"
     "@promptions/promptions-ui": "workspace:*"
     "@types/react": "npm:^18.3.12"
     "@types/react-dom": "npm:^18.3.1"
@@ -3660,6 +3662,18 @@ __metadata:
     zod: "npm:^3.25.67"
   peerDependencies:
     typescript: ">=5.0.0"
+  languageName: unknown
+  linkType: soft
+
+"@promptions/promptions-openai-proxy@workspace:*, @promptions/promptions-openai-proxy@workspace:packages/promptions-openai-proxy":
+  version: 0.0.0-use.local
+  resolution: "@promptions/promptions-openai-proxy@workspace:packages/promptions-openai-proxy"
+  dependencies:
+    "@types/node": "npm:^20.0.0"
+    typescript: "npm:^5.0.0"
+    vite: "npm:7.3.5"
+  peerDependencies:
+    vite: ">=5.0.0"
   languageName: unknown
   linkType: soft
 

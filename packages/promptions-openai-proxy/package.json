@@ -1,0 +1,37 @@
+{
+    "name": "@promptions/promptions-openai-proxy",
+    "version": "1.0.0",
+    "description": "Vite plugin that proxies OpenAI/Azure OpenAI requests server-side so the API key never reaches the browser bundle",
+    "type": "module",
+    "main": "src/index.js",
+    "types": "src/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./src/index.d.ts",
+            "default": "./src/index.js"
+        }
+    },
+    "license": "MIT",
+    "scripts": {
+        "typecheck": "tsc --noEmit"
+    },
+    "files": [
+        "src",
+        "README.md"
+    ],
+    "keywords": [
+        "vite",
+        "vite-plugin",
+        "openai",
+        "proxy",
+        "promptions"
+    ],
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "typescript": "^5.0.0",
+        "vite": "7.3.5"
+    },
+    "peerDependencies": {
+        "vite": ">=5.0.0"
+    }
+}

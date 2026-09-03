@@ -1,0 +1,23 @@
+{
+    "name": "promptions-openai-proxy",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "packages/promptions-openai-proxy/src",
+    "projectType": "library",
+    "targets": {
+        "typecheck": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "tsc --noEmit",
+                "cwd": "packages/promptions-openai-proxy"
+            }
+        },
+        "test": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "node --test src/index.test.js",
+                "cwd": "packages/promptions-openai-proxy"
+            }
+        }
+    },
+    "tags": ["type:lib", "scope:promptions-openai-proxy"]
+}

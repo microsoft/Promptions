@@ -97,7 +97,11 @@ yarn build
 
 ### 3. Run the applications (and set your API key)
 
-The apps can call either the **standard OpenAI API** or your own **Azure OpenAI**-hosted models. Configure whichever you have access to via environment variables — the same `VITE_OPENAI_API_KEY` variable is used in both cases (it holds either your OpenAI key or your Azure OpenAI key).
+The apps can call either the **standard OpenAI API** or your own **Azure OpenAI**-hosted models. Configure whichever you have access to via environment variables — the same `OPENAI_API_KEY` variable is used in both cases (it holds either your OpenAI key or your Azure OpenAI key).
+
+> **The API key stays on the server.** These variables are deliberately **not** prefixed with `VITE_`, so Vite cannot inline them into the browser bundle. The dev/preview server proxies requests to your provider at `/api/openai` and attaches the credential server-side. See [`packages/promptions-openai-proxy`](packages/promptions-openai-proxy/README.md).
+
+> **Upgrading from an earlier version?** Delete `VITE_OPENAI_API_KEY` from your `.env` files and rotate that key. Vite serves every `VITE_`-prefixed variable to client code, so a key left there is still readable by anyone loading the app even though no code references it. **The dev server refuses to start while that variable is set**, so you cannot miss this step.
 
 Option A — .env files (recommended for local development):
 
@@ -106,9 +110,9 @@ Option A — .env files (recommended for local development):
 - Create `apps/promptions-chat/.env` (and `apps/promptions-image/.env`) with:
 
     ```dotenv
-    VITE_OPENAI_API_KEY=your_openai_api_key_here
+    OPENAI_API_KEY=your_openai_api_key_here
     # Optional: override the chat model (defaults to gpt-5.4-nano).
-    # VITE_OPENAI_MODEL=gpt-5.4-nano
+    # OPENAI_MODEL=gpt-5.4-nano
     ```
 
 **Azure OpenAI** (using your own hosted deployment)
@@ -117,47 +121,49 @@ Option A — .env files (recommended for local development):
 
     ```dotenv
     # Your Azure OpenAI resource key
-    VITE_OPENAI_API_KEY=your_azure_openai_key_here
+    OPENAI_API_KEY=your_azure_openai_key_here
     # Your Azure OpenAI resource endpoint
-    VITE_OPENAI_BASE_URL=https://your-resource.openai.azure.com
+    OPENAI_BASE_URL=https://your-resource.openai.azure.com
     # Required for Azure OpenAI
-    VITE_OPENAI_API_VERSION=2024-12-01-preview
+    OPENAI_API_VERSION=2024-12-01-preview
     # On Azure, this is your DEPLOYMENT NAME (not the underlying model id).
     # Ensure this deployment targets a chat-completions-compatible model.
-    VITE_OPENAI_MODEL=your_chat_deployment_name
+    OPENAI_MODEL=your_chat_deployment_name
     ```
 
 Option B — set it in your shell (PowerShell example):
 
 ```powershell
 # Chat app — standard OpenAI
-$env:VITE_OPENAI_API_KEY="your_openai_api_key_here" ; yarn workspace @promptions/promptions-chat dev
+$env:OPENAI_API_KEY="your_openai_api_key_here" ; yarn workspace @promptions/promptions-chat dev
 
 # Chat app — Azure OpenAI
-$env:VITE_OPENAI_API_KEY="your_azure_openai_key_here"
-$env:VITE_OPENAI_BASE_URL="https://your-resource.openai.azure.com"
-$env:VITE_OPENAI_API_VERSION="2024-12-01-preview"
-$env:VITE_OPENAI_MODEL="your_chat_deployment_name"
+$env:OPENAI_API_KEY="your_azure_openai_key_here"
+$env:OPENAI_BASE_URL="https://your-resource.openai.azure.com"
+$env:OPENAI_API_VERSION="2024-12-01-preview"
+$env:OPENAI_MODEL="your_chat_deployment_name"
 yarn workspace @promptions/promptions-chat dev
 
 # Image app (swap workspace name; same variable conventions apply)
-$env:VITE_OPENAI_API_KEY="your_openai_api_key_here" ; yarn workspace @promptions/promptions-image dev
+$env:OPENAI_API_KEY="your_openai_api_key_here" ; yarn workspace @promptions/promptions-image dev
 ```
 
 #### Configuration reference
 
-Both apps read these `VITE_*` variables from their respective `.env` files.
+Both apps read these variables from their respective `.env` files. They are read by the dev/preview server only. `OPENAI_API_KEY` and `OPENAI_BASE_URL` never reach the browser; `OPENAI_API_VERSION`, `OPENAI_MODEL` and `OPENAI_IMAGE_MODEL` are injected into client code, and are not secret.
 
-| Variable                  | Description                                                                                                                         | Default        |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| `VITE_OPENAI_API_KEY`     | **Required.** Your OpenAI API key, or your Azure OpenAI resource key when `VITE_OPENAI_BASE_URL` is set.                            | _(unset)_      |
-| `VITE_OPENAI_MODEL`       | Chat model used for completions. On Azure OpenAI this is the **deployment name**. The image-generation model is selected in the UI. | `gpt-5.4-nano` |
-| `VITE_OPENAI_BASE_URL`    | Custom endpoint. Set this to use Azure OpenAI (e.g. `https://your-resource.openai.azure.com`) or another OpenAI-compatible service. | _(unset)_      |
-| `VITE_OPENAI_API_VERSION` | API version. **Required** when `VITE_OPENAI_BASE_URL` points at Azure OpenAI (e.g. `2024-12-01-preview`).                           | _(unset)_      |
+| Variable             | Description                                                                                                                         | Default        |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `OPENAI_API_KEY`     | **Required.** Your OpenAI API key, or your Azure OpenAI resource key when `OPENAI_BASE_URL` is set.                                 | _(unset)_      |
+| `OPENAI_MODEL`       | Chat model used for completions. On Azure OpenAI this is the **deployment name**. The image-generation model is selected in the UI. | `gpt-5.4-nano` |
+| `OPENAI_BASE_URL`    | Custom endpoint. Set this to use Azure OpenAI (e.g. `https://your-resource.openai.azure.com`) or another OpenAI-compatible service. | _(unset)_      |
+| `OPENAI_API_VERSION` | API version. **Required** when `OPENAI_BASE_URL` points at Azure OpenAI (e.g. `2024-12-01-preview`).                                | _(unset)_      |
+| `OPENAI_API_STYLE`   | `openai` or `azure`. Overrides how the credential is sent, for OpenAI-compatible backends that need a custom `OPENAI_BASE_URL`.     | inferred       |
+| `OPENAI_IMAGE_MODEL` | Image model used by the image app. On Azure OpenAI this is the image **deployment name**, which need not match the model id.        | `gpt-image-1`  |
 
-When `VITE_OPENAI_BASE_URL` is set, the apps use the Azure OpenAI client; otherwise they use the standard OpenAI client.
+When `OPENAI_BASE_URL` is set, the apps use Azure OpenAI conventions (`api-key` header, deployment-based URLs); otherwise they use the standard OpenAI conventions (`Authorization: Bearer`). Set `OPENAI_API_STYLE=openai` to use a custom endpoint with standard OpenAI conventions.
 
-> **Model compatibility:** The chat reference app uses `VITE_OPENAI_MODEL`, defaulting to `gpt-5.4-nano`. On Azure OpenAI, make sure the deployment named in `VITE_OPENAI_MODEL` targets a chat-completions-compatible model.
+> **Model compatibility:** The chat reference app uses `OPENAI_MODEL`, defaulting to `gpt-5.4-nano`. On Azure OpenAI, make sure the deployment named in `OPENAI_MODEL` targets a chat-completions-compatible model, and set `OPENAI_IMAGE_MODEL` to your image deployment name — the image app otherwise requests the model id `gpt-image-1`, which Azure resolves as a deployment name.
 
 Start the dev servers:
 

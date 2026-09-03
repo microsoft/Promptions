@@ -2,7 +2,7 @@
     "name": "@promptions/promptions-image",
     "version": "1.0.0",
     "type": "module",
-    "description": "Image generation interface for promptions using OpenAI DALL-E and Fluent UI",
+    "description": "Image generation interface for promptions using OpenAI gpt-image-1 and Fluent UI",
     "license": "MIT",
     "scripts": {
         "dev": "vite --port 3004",
@@ -21,6 +21,7 @@
         "react-dom": "^18.3.1"
     },
     "devDependencies": {
+        "@promptions/promptions-openai-proxy": "workspace:*",
         "@types/react": "^18.3.12",
         "@types/react-dom": "^18.3.1",
         "@vitejs/plugin-react": "^4.3.3",

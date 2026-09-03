@@ -4,8 +4,8 @@ export type State<T> = { get: T; set: (fn: (prev: T) => void) => void };
 // Image generation parameters
 export interface BaseImageGenerationParams {
     prompt: string;
-    size?: "1024x1024" | "1024x1792" | "1792x1024";
-    quality?: "high" | "medium" | "low";
+    size?: "1024x1024" | "1024x1536" | "1536x1024" | "auto";
+    quality?: "high" | "medium" | "low" | "auto";
     n?: number;
 }
 
@@ -13,23 +13,13 @@ export interface BaseImageGenerationParams {
 export interface GPTImage1Params {
     kind: "gpt-image-1";
     prompt: string;
-    size?: "1024x1024" | "1024x1792" | "1792x1024";
-    quality?: "high" | "medium" | "low";
+    size?: "1024x1024" | "1024x1536" | "1536x1024" | "auto";
+    quality?: "high" | "medium" | "low" | "auto";
     n?: number;
 }
 
-// DALL-E 3 parameters
-export interface DallE3Params {
-    kind: "dall-e-3";
-    prompt: string;
-    size?: "1024x1024" | "1024x1792" | "1792x1024";
-    quality?: "standard" | "hd";
-    style?: "vivid" | "natural";
-    n?: number;
-}
-
-// Union type for all image generation parameters
-export type ImageGenerationParams = GPTImage1Params | DallE3Params;
+// Image generation parameters
+export type ImageGenerationParams = GPTImage1Params;
 
 // Generated image result
 export interface GeneratedImage {

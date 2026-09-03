@@ -18,13 +18,6 @@
                 "cwd": "packages/promptions-ui"
             }
         },
-        "test": {
-            "executor": "nx:run-commands",
-            "options": {
-                "command": "jest",
-                "cwd": "packages/promptions-ui"
-            }
-        },
         "clean": {
             "executor": "nx:run-commands",
             "options": {
